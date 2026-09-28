@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b1220"><title>VIN Scanner | فحص رقم الشاصي</title>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{--bg:#07111f;--panel:#0d1a2b;--line:#1e3550;--text:#f5f7fb;--muted:#91a4ba;--blue:#3b82f6;--green:#22c55e;--red:#ef4444}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% 0,#17365a 0,#07111f 40%);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;min-height:100vh;padding:20px}.container{max-width:920px;margin:auto}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#3b82f6,#06b6d4);display:grid;place-items:center;font-size:16px;font-weight:900;box-shadow:0 10px 30px #1683ff40}.title h1{font-size:22px;margin:0}.title p{font-size:12px;color:var(--muted);margin:4px 0}.badge{border:1px solid #2d4664;background:#0b1728;color:#a9c5e3;border-radius:999px;padding:7px 11px;font-size:12px}.card{background:linear-gradient(180deg,#0e1d30f2,#0b1728f2);border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:0 20px 50px #0006;margin-bottom:16px}.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}.section-head h2{font-size:16px;margin:0}.hint{font-size:12px;color:var(--muted)}.camera{position:relative;overflow:hidden;border-radius:18px;background:#020711;aspect-ratio:16/10;border:1px solid #213954}.camera video,.camera canvas,.camera img{width:100%;height:100%;object-fit:cover;display:block}.camera.empty:after{content:"وجه الكاميرا نحو لوحة رقم الشاصي";position:absolute;inset:0;display:grid;place-items:center;color:#8ea3ba;font-size:14px}.scan-frame{position:absolute;left:8%;right:8%;top:27%;height:46%;border:2px solid #55b7ff;border-radius:14px;box-shadow:0 0 0 999px #0004;pointer-events:none}.scan-frame:before{content:"";position:absolute;left:8%;right:8%;top:50%;height:2px;background:#3b82f6;box-shadow:0 0 18px #3b82f6}.camera-status{position:absolute;bottom:10px;right:10px;left:10px;background:#06101dd9;border:1px solid #ffffff18;border-radius:10px;padding:7px 10px;font-size:12px;color:#d8e7f7}.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.btn{border:0;border-radius:13px;padding:13px 14px;font-size:15px;font-weight:700;cursor:pointer;color:white;background:linear-gradient(135deg,var(--blue),#2563eb);box-shadow:0 8px 22px #2563eb35}.btn.secondary{background:#12243a;border:1px solid #29425f;color:#cfe0f2;box-shadow:none}.btn.green{background:linear-gradient(135deg,#22c55e,#16a34a)}.btn:disabled{opacity:.45;cursor:not-allowed}.hidden{display:none!important}.progress{height:7px;background:#14263d;border-radius:99px;overflow:hidden;margin-top:11px}.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#22c55e,#3b82f6);transition:.25s}.status{min-height:20px;margin-top:9px;font-size:13px;color:#9db1c7}.status.ok{color:#62e58a}.status.err{color:#ff8b8b}.field{margin-top:13px}.field label{font-size:12px;color:#9fb2c8;display:block;margin-bottom:7px}.input-wrap{position:relative}.field input{width:100%;background:#071322;color:#fff;border:1px solid #29425f;border-radius:13px;padding:14px;font-size:18px;outline:none;direction:ltr;text-align:left;letter-spacing:1.5px;font-weight:700}.field input:focus{border-color:#3b82f6;box-shadow:0 0 0 3px #3b82f620}.counter{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:11px;color:#71869e;background:#102239;padding:4px 7px;border-radius:7px}.note{direction:rtl!important;text-align:right!important;letter-spacing:0!important;font-size:14px!important;font-weight:500!important}.validation{margin-top:7px;font-size:12px;color:#ff8d8d}.validation.good{color:#5ee28a}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}.stat{background:#0b1829;border:1px solid var(--line);border-radius:15px;padding:13px}.stat b{display:block;font-size:21px}.stat span{font-size:11px;color:var(--muted)}.record{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #1b3048}.record:last-child{border-bottom:0}.num{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:15px;font-weight:800;direction:ltr;text-align:left;flex:1;word-break:break-all}.meta{font-size:11px;color:#8297ad;margin-top:4px}.del{background:transparent;border:1px solid #69343a;color:#ff9292;border-radius:9px;padding:7px 9px;cursor:pointer}.empty{text-align:center;color:#71869d;padding:24px 5px;font-size:13px}.footer{text-align:center;color:#647990;font-size:11px;padding:4px 0 15px}@media(max-width:600px){body{padding:12px}.top{align-items:flex-start}.badge{display:none}.card{padding:14px;border-radius:18px}.camera{aspect-ratio:4/3}.actions{grid-template-columns:1fr}.title h1{font-size:19px}.stats{gap:7px}.stat{padding:10px}}
+</style></head>
+<body><div class="container">
+<header class="top"><div class="brand"><div class="logo">VIN</div><div class="title"><h1>VIN Scanner</h1><p>تصوير وقراءة رقم الشاصي بسرعة</p></div></div><div class="badge">GitHub Pages • HTTPS</div></header>
+<section class="card"><div class="section-head"><h2>📷 تصوير رقم الشاصي</h2><span class="hint">استخدم الكاميرا الخلفية</span></div><div class="camera empty" id="cameraBox"><video id="video" autoplay playsinline muted class="hidden"></video><canvas id="canvas" class="hidden"></canvas><img id="photo" class="hidden" alt="VIN"><div class="scan-frame"></div><div class="camera-status" id="cameraStatus">اضغط تشغيل الكاميرا للبدء</div></div><div class="actions"><button class="btn" id="startBtn">📷 تشغيل الكاميرا</button><button class="btn secondary" id="shotBtn" disabled>📸 تصوير وقراءة VIN</button><button class="btn secondary" id="fileBtn">🖼️ اختيار صورة</button><button class="btn secondary hidden" id="againBtn">↩️ إعادة التصوير</button></div><input id="fileInput" type="file" accept="image/*" capture="environment" class="hidden"><div class="progress"><i id="progress"></i></div><div class="status" id="status">بعد التصوير ستتم معالجة الصورة بعدة طرق ثم مقارنة نتائج OCR.</div><div id="confidenceBox" class="hidden" style="margin-top:10px;padding:10px;border:1px solid #29425f;border-radius:12px;background:#071322;font-size:12px"><b>Confidence:</b> <span id="confidence">—</span><div id="confidenceNote" style="margin-top:4px;color:#91a4ba"></div></div></section>
+<section class="card"><div class="section-head"><h2>✏️ مراجعة رقم الشاصي</h2><span class="hint">يمكنك التعديل قبل الحفظ</span></div><div class="field"><label for="vin">VIN / رقم الشاصي</label><div class="input-wrap"><input id="vin" maxlength="17" autocomplete="off" spellcheck="false" placeholder="مثال: WBAXXXXXXXXXXXXXX"><span class="counter" id="counter">0/17</span></div><div class="validation" id="validation">يجب أن يتكون VIN القياسي من 17 خانة.</div></div><div class="field"><label for="note">ملاحظة أو نوع السيارة (اختياري)</label><input id="note" class="note" maxlength="120" placeholder="مثال: Mercedes-Benz / لون أبيض"></div><button class="btn green" id="saveBtn" disabled style="margin-top:13px">💾 حفظ في السجل</button></section>
+<section class="card"><div class="section-head"><h2>📋 السجل</h2><button class="btn secondary" id="exportBtn" style="width:auto;padding:9px 12px;font-size:12px">⬇️ Excel</button></div><div class="stats"><div class="stat"><b id="total">0</b><span>إجمالي السجلات</span></div><div class="stat"><b id="valid">0</b><span>VIN صحيح</span></div><div class="stat"><b id="today">0</b><span>اليوم</span></div></div><div id="list"></div></section><div class="footer">بيانات هذه النسخة تُحفظ محليًا في المتصفح على كل جهاز.</div></div>
+<script>
+const $=id=>document.getElementById(id),video=$("video"),canvas=$("canvas"),photo=$("photo"),cameraBox=$("cameraBox"),cameraStatus=$("cameraStatus"),startBtn=$("startBtn"),shotBtn=$("shotBtn"),fileBtn=$("fileBtn"),againBtn=$("againBtn"),fileInput=$("fileInput"),statusEl=$("status"),progress=$("progress"),vin=$("vin"),counter=$("counter"),validation=$("validation"),note=$("note"),saveBtn=$("saveBtn"),list=$("list");let stream=null,records=JSON.parse(localStorage.getItem("vin_records_v2")||"[]"),lastPhotoData="",lastOCR=null;
+function setStatus(t,type=""){statusEl.textContent=t;statusEl.className="status "+type}function normalizeOCRText(s){return (s||"").toUpperCase().replace(/[\n\r\t\-_.:;,|/\\ ]+/g,"").replace(/[^A-Z0-9]/g,"")}
+function cleanVIN(s){return normalizeOCRText(s).replace(/[IOQ]/g,"")}
+function isVIN(s){return /^[A-HJ-NPR-Z0-9]{17}$/.test(s)}
+function vinDistance(a,b){let d=Math.abs(a.length-b.length),n=Math.min(a.length,b.length);for(let i=0;i<n;i++)if(a[i]!==b[i])d++;return d}
+const OCR_CONFUSIONS={"0":["O","Q"],"O":["0"],"1":["I"],"I":["1"],"5":["S"],"S":["5"],"8":["B"],"B":["8"]};
+function repairCandidate(raw){
+  let x=normalizeOCRText(raw).slice(0,24);
+  if(x.length<17)return x;
+  if(x.length===17)return x;
+  const hits=[]; for(let i=0;i<=x.length-17;i++)hits.push(x.slice(i,i+17));
+  return hits.sort((a,b)=>Math.abs(a.length-17)-Math.abs(b.length-17))[0]||x.slice(0,17);
+}
+function candidateFromText(raw){
+  const compact=normalizeOCRText(raw); const out=[];
+  const re=/[A-Z0-9]{11,22}/g; let m;
+  while((m=re.exec(compact)))out.push(repairCandidate(m[0]));
+  if(compact)out.push(repairCandidate(compact));
+  return [...new Set(out.filter(Boolean))];
+}
+function applyVINContext(candidate){
+  // Only repair ambiguous OCR characters when the resulting string is a valid 17-char VIN.
+  if(candidate.length!==17)return [];
+  const chars=candidate.split(''), positions=[];
+  chars.forEach((c,i)=>{if(OCR_CONFUSIONS[c])positions.push(i)});
+  let variants=[chars.join('')];
+  for(const pos of positions.slice(0,3)){
+    const next=[]; for(const v of variants){next.push(v);for(const alt of OCR_CONFUSIONS[v[pos]]||[])next.push(v.slice(0,pos)+alt+v.slice(pos+1))} variants=[...new Set(next)];
+  }
+  return variants.filter(v=>isVIN(v));
+}
+function databaseMatch(candidate){
+  if(!candidate||!records.length)return {match:null,score:0};
+  let best=null,bestScore=0;
+  for(const r of records){const n=cleanVIN(r.number); if(n.length!==17||candidate.length!==17)continue;const d=vinDistance(n,candidate);const score=Math.max(0,100-d*9);if(score>bestScore){bestScore=score;best=n}}
+  return {match:best,score:bestScore};
+}
+function updateConfidence(result){
+  const box=$("confidenceBox"),el=$("confidence"),note=$("confidenceNote");box.classList.remove("hidden");el.textContent=Math.round(result.confidence)+"%";
+  if(result.confidence>=90){el.style.color="#5ee28a";note.textContent="ثقة عالية — مع ذلك راجع الرقم قبل الحفظ."}
+  else if(result.confidence>=70){el.style.color="#facc15";note.textContent="ثقة متوسطة — توجد مؤشرات اتفاق، راجع الأحرف المشكوك فيها."}
+  else{el.style.color="#ff8d8d";note.textContent="ثقة منخفضة — لا يتم اعتماد الرقم تلقائيًا. عدّله يدويًا قبل الحفظ."}
+}
+function canvasVariant(source,mode,angle=0){
+  const c=document.createElement("canvas"),ctx=c.getContext("2d",{willReadFrequently:true});
+  const w=source.videoWidth||source.naturalWidth||source.width,h=source.videoHeight||source.naturalHeight||source.height;
+  const scale=mode.includes("up")?2:1;c.width=w*scale;c.height=h*scale;ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality="high";
+  ctx.save();ctx.translate(c.width/2,c.height/2);ctx.rotate(angle*Math.PI/180);ctx.drawImage(source,-c.width/2,-c.height/2,c.width,c.height);ctx.restore();
+  const img=ctx.getImageData(0,0,c.width,c.height),d=img.data;
+  if(mode!=="original"){for(let i=0;i<d.length;i+=4){let y=.299*d[i]+.587*d[i+1]+.114*d[i+2];if(mode==="gray"||mode==="sharp"||mode==="threshold"||mode==="contrast")d[i]=d[i+1]=d[i+2]=y; if(mode==="contrast"){y=Math.max(0,Math.min(255,(y-128)*1.65+128));d[i]=d[i+1]=d[i+2]=y} if(mode==="threshold"){let t=y>150?255:0;d[i]=d[i+1]=d[i+2]=t}}}
+  if(mode==="sharp"){const copy=new Uint8ClampedArray(d);for(let y=1;y<c.height-1;y++)for(let x=1;x<c.width-1;x++){const i=(y*c.width+x)*4;for(let k=0;k<3;k++){const v=5*copy[i+k]-copy[i-4+k]-copy[i+4+k]-copy[i-c.width*4+k]-copy[i+c.width*4+k];d[i+k]=Math.max(0,Math.min(255,v))}}}
+  ctx.putImageData(img,0,0);return c;
+}
+async function blobFromCanvas(c){return new Promise(r=>c.toBlob(r,"image/jpeg",.94))}
+async function runOCRVariant(blob,label){
+  const {data}=await Tesseract.recognize(blob,"eng",{logger:m=>{if(m.status==="recognizing text")progress.style.width=Math.min(96,Math.round(m.progress*18)+3)+"%"}});
+  const text=data.text||""; const confs=(data.words||[]).map(w=>Number(w.confidence)).filter(Number.isFinite);const ocrConf=confs.length?confs.reduce((a,b)=>a+b,0)/confs.length:0;
+  return {label,text,ocrConf,candidates:candidateFromText(text)};
+}
+async function processImage(blob){
+  setStatus("جارٍ تحسين الصورة وتجربة عدة طرق للقراءة...","");progress.style.width="4%";lastOCR=null;
+  try{
+    const img=new Image();img.src=URL.createObjectURL(blob);await img.decode();
+    const modes=["original","gray","contrast","sharp","threshold","up-gray","up-contrast"];
+    const angles=[0,-3,3];const results=[];let count=0;
+    for(const mode of modes){for(const angle of (mode==="original"?[0]:angles)){
+      const c=canvasVariant(img,mode,angle);const b=await blobFromCanvas(c);results.push(await runOCRVariant(b,mode+"/"+angle));count++;progress.style.width=Math.round(count/(modes.length+2)*80)+"%";
+      // Stop early when multiple independent passes agree on a valid VIN.
+      const valid=results.flatMap(r=>r.candidates).filter(isVIN);const freq={};valid.forEach(v=>freq[v]=(freq[v]||0)+1);if(Object.values(freq).some(n=>n>=3))break;
+    }}
+    const all=results.flatMap(r=>r.candidates.map(c=>({c,ocr:results.find(r=>r.candidates.includes(c))?.ocrConf||0})));const valid=all.filter(x=>isVIN(x.c));
+    const freq={};valid.forEach(x=>freq[x.c]=(freq[x.c]||0)+1);let best=null;
+    if(valid.length){best=[...new Set(valid.map(x=>x.c))].map(c=>{const arr=valid.filter(x=>x.c===c),avg=arr.reduce((a,x)=>a+x.ocr,0)/arr.length,db=databaseMatch(c);return{c,cons:freq[c],avg,db}}).sort((a,b)=>(b.cons-a.cons)||(b.avg-a.avg)||(b.db.score-a.db.score))[0]}
+    if(!best){
+      // Keep the strongest raw candidate visible for manual correction, but never auto-claim it as valid.
+      const fallback=all.sort((a,b)=>Math.abs(a.c.length-17)-Math.abs(b.c.length-17))[0]?.c||"";vin.value=fallback.slice(0,17);validate();progress.style.width="100%";setStatus("⚠️ الصورة لم تعطِ نتيجة موثوقة. الرقم الظاهر يحتاج مراجعة يدوية.","err");updateConfidence({confidence:25});return;
+    }
+    const consensus=Math.min(100,50+best.cons*12),ocrScore=Math.min(100,best.avg),dbBoost=best.db.score>=90?8:best.db.score>=75?4:0;
+    const confidence=Math.min(99,Math.round(consensus*.45+ocrScore*.45+dbBoost));
+    let final=best.c;
+    // Contextual correction is only applied when it yields a valid VIN and the database strongly supports it.
+    const repaired=applyVINContext(final);if(repaired.length&&best.db.score>=90&&!repaired.includes(final)){final=best.db.match}
+    vin.value=final;validate();lastOCR={confidence,raw:best.c,db:best.db};updateConfidence({confidence});progress.style.width="100%";
+    if(confidence>=90)setStatus("✓ قراءة عالية الثقة. راجع الرقم ثم احفظ.","ok");else if(confidence>=70)setStatus("⚠️ قراءة متوسطة الثقة. راجع الأحرف المشكوك فيها قبل الحفظ.");else setStatus("⚠️ قراءة منخفضة الثقة. لا تعتمد الرقم دون مراجعة.","err");
+  }catch(e){console.error(e);progress.style.width="0%";setStatus("تعذرت معالجة الصورة. اكتب الرقم يدويًا في الخانة.","err");updateConfidence({confidence:0})}
+}
+function capture(){if(!video.videoWidth)return;canvas.width=video.videoWidth;canvas.height=video.videoHeight;canvas.getContext("2d").drawImage(video,0,0,canvas.width,canvas.height);canvas.toBlob(async b=>{photo.src=URL.createObjectURL(b);photo.classList.remove("hidden");video.classList.add("hidden");againBtn.classList.remove("hidden");const fr=new FileReader();fr.onload=()=>{lastPhotoData=fr.result};fr.readAsDataURL(b);await processImage(b)},"image/jpeg",.92)}shotBtn.onclick=capture;againBtn.onclick=()=>{photo.classList.add("hidden");video.classList.remove("hidden");againBtn.classList.add("hidden");setStatus("جاهز لإعادة التصوير.");progress.style.width="0%"};fileBtn.onclick=()=>fileInput.click();fileInput.onchange=async()=>{const f=fileInput.files[0];if(!f)return;photo.src=URL.createObjectURL(f);photo.classList.remove("hidden");video.classList.add("hidden");const fr=new FileReader();fr.onload=()=>{lastPhotoData=fr.result};fr.readAsDataURL(f);await processImage(f)};
+saveBtn.onclick=()=>{const n=vin.value.trim();if(!isVIN(n))return;const existing=records.find(r=>cleanVIN(r.number)===n);if(existing&&!confirm("هذا VIN موجود في السجل. هل تريد حفظه مرة أخرى؟"))return;const rec={id:crypto.randomUUID?crypto.randomUUID():"r"+Date.now(),number:n,note:note.value.trim(),photo:lastPhotoData||"",confidence:lastOCR?.confidence||0,ts:Date.now()};records.unshift(rec);try{localStorage.setItem("vin_records_v2",JSON.stringify(records))}catch(e){rec.photo="";localStorage.setItem("vin_records_v2",JSON.stringify(records))}render();vin.value="";note.value="";lastPhotoData="";lastOCR=null;$("confidenceBox").classList.add("hidden");validate();progress.style.width="0%";setStatus("✓ تم حفظ VIN والصورة في السجل.","ok")};function escape(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}function render(){$("total").textContent=records.length;$("valid").textContent=records.filter(r=>/^[A-HJ-NPR-Z0-9]{17}$/.test(r.number)).length;const d=new Date();$("today").textContent=records.filter(r=>{const x=new Date(r.ts);return x.getFullYear()===d.getFullYear()&&x.getMonth()===d.getMonth()&&x.getDate()===d.getDate()}).length;if(!records.length){list.innerHTML='<div class="empty">لا توجد سجلات بعد.</div>';return}list.innerHTML=records.map(r=>`<div class="record"><div style="flex:1"><div class="num">${escape(r.number)}</div><div class="meta">${new Date(r.ts).toLocaleString("ar-JO")}${r.note?" • "+escape(r.note):""}${r.confidence?" • Confidence "+Math.round(r.confidence)+"%":""}</div></div><button class="del" data-id="${r.id}">حذف</button></div>`).join("");list.querySelectorAll(".del").forEach(b=>b.onclick=()=>{records=records.filter(r=>r.id!==b.dataset.id);localStorage.setItem("vin_records_v2",JSON.stringify(records));render()})}$('exportBtn').onclick=()=>{if(!records.length){setStatus("لا توجد بيانات لتصديرها.","err");return}const data=records.map((r,i)=>({"#":i+1,"VIN / رقم الشاصي":r.number,"ملاحظة":r.note||"","التاريخ":new Date(r.ts).toLocaleString("ar-JO")}));const ws=XLSX.utils.json_to_sheet(data),wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"VIN Records");XLSX.writeFile(wb,"VIN_Records.xlsx")};window.addEventListener("beforeunload",()=>{if(stream)stream.getTracks().forEach(t=>t.stop())});render();validate();
+</script></body></html>
